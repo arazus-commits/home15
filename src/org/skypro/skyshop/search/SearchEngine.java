@@ -23,6 +23,7 @@ public class SearchEngine {
         return massive;
     }
 
+
     public void add(Searchable searchable) {
         if (count < this.size.length) {
             for (int i = 0; i < this.size.length; i++) {
@@ -33,6 +34,34 @@ public class SearchEngine {
                 }
             }
         }
+    }
+
+    public Searchable searchable(String search) throws BestResultNotFound {
+        Searchable bestMatch = null;
+        int maxQuantity = 0;
+        for (int i = 0; i < this.size.length; i++) {
+            int quantity = 0;
+            int index = 0;
+            if (this.size[i] != null) {
+                int indexSubstrings = this.size[i].getSearchTerm().indexOf(search, index);
+                while (this.size[i] != null && indexSubstrings != -1) {
+                    quantity++;
+                    index = indexSubstrings + search.length();
+                    indexSubstrings = this.size[i].getSearchTerm().indexOf(search, index);
+                }
+            }
+            if (quantity > maxQuantity) {
+                bestMatch = size[i];
+                maxQuantity = quantity;
+            }
+
+        }
+        if (bestMatch == null) {
+            throw new BestResultNotFound(search);
+
+        }
+        return bestMatch;
+
     }
 
 }

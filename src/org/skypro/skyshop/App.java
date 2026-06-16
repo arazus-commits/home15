@@ -6,13 +6,16 @@ import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngine;
+import org.skypro.skyshop.search.Searchable;
+
 import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
         Product fruit = new SimpleProduct("Яблоко", 323);
-        Product fruit2 = new DiscountedProduct("Груша", 423,20);
+        Product fruit2 = new DiscountedProduct("Груша", 423, 20);
         Product fruit3 = new FixPriceProduct("Виногдрад");
 
 
@@ -54,8 +57,33 @@ public class App {
         System.out.println(Arrays.toString(product.search("Яблоко")));
         System.out.println(Arrays.toString(product.search("Текст")));
 
+        try {
+            Product fruit4 = new SimpleProduct("  ", 323);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            Product fruit5 = new SimpleProduct("Банан", 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            Product fruit6 = new DiscountedProduct("Абрикос ", 320, 120);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
 
-
-
+        try {
+            Searchable result = product.searchable("Яблоко");
+            System.out.println("Найден лучший результат");
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            Searchable result2 = product.searchable("Космос");
+            System.out.println("Найден лучший результат");
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
