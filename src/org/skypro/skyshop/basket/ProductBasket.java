@@ -24,7 +24,7 @@ public class ProductBasket {
         int sum = 0;
         for (int i = 0; i < massiveProduct.length; i++) {
             if (massiveProduct[i] != null) {
-                sum += massiveProduct[i].getPriceProduct();
+                sum += massiveProduct[i].getPrice();
             }
         }
         return sum;
@@ -40,7 +40,8 @@ public class ProductBasket {
             }
         }
         if (count > 0) {
-            System.out.println("Итого:" + sumProduct());
+            System.out.println("Итого: " + sumProduct());
+            System.out.println("Специальных товаров: " + sumSpecial());
         }
     }
 
@@ -58,6 +59,15 @@ public class ProductBasket {
         for (int i = 0; i < massiveProduct.length; i++) {
 massiveProduct[i] = null;
         }
+    }
+    public int sumSpecial() {
+        int sum = 0;
+        for (int i = 0; i < massiveProduct.length; i++) {
+            if (massiveProduct[i] != null && massiveProduct[i].isSpecial() == true) {
+                sum += 1;
+            }
+        }
+        return sum;
     }
 }
 
