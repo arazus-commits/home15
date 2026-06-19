@@ -1,5 +1,5 @@
 package org.skypro.skyshop;
-
+import java.util.List;
 import org.skypro.skyshop.article.Article;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.product.DiscountedProduct;
@@ -36,15 +36,13 @@ public class App {
 
         System.out.println(basket.sameName("Апельсин"));
 
-        basket.cleaningMassive();
-
         basket.sealProduct();
 
         System.out.println(basket.sameName("Яблоко"));
 
         System.out.println(basket.sumProduct());
 
-        SearchEngine product = new SearchEngine(5);
+        SearchEngine product = new SearchEngine();
         product.add(fruit);
         product.add(fruit2);
         product.add(fruit3);
@@ -54,8 +52,8 @@ public class App {
         product.add(article);
         product.add(article2);
 
-        System.out.println(Arrays.toString(product.search("Яблоко")));
-        System.out.println(Arrays.toString(product.search("Текст")));
+        System.out.println(product.search("Яблоко"));
+        System.out.println(product.search("Текст"));
 
         try {
             Product fruit4 = new SimpleProduct("  ", 323);
@@ -85,5 +83,20 @@ public class App {
         } catch (BestResultNotFound e) {
             System.out.println(e.getMessage());
         }
+
+        List<Product> removed = basket.removeProductByName("Яблоко");
+        System.out.println("Удаленные продукты: " + removed);
+        basket.sealProduct();
+        List<Product> removed2 = basket.removeProductByName("Апельсин");
+
+        if (removed2.isEmpty()) {
+            System.out.println("Список пуст");
+        }
+        basket.sealProduct();
+
+
+
+
+
     }
 }

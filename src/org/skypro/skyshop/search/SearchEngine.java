@@ -2,56 +2,46 @@ package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.product.Product;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 public class SearchEngine {
-    private int count = 0;
-    private Searchable[] size;
-    public SearchEngine(int size) {
-        this.size = new Searchable[size];
-    }
-    public Searchable[] search(String query) {
-        Searchable[] massive = new Searchable[5];
-        int foundCount = 0;
-        for (int i = 0; i < this.size.length; i++) {
-            if (this.size[i] != null && this.size[i].getSearchTerm().contains(query) == true && foundCount <= 5 ) {
-                massive[foundCount] = this.size[i];
-                foundCount++;
-            }
-            if (foundCount == 5){
-                break;
+    private final List<Searchable> size = new LinkedList<>();
+
+
+    public List <Searchable> search(String query) {
+        List<Searchable> massiveProduct = new LinkedList<>();
+        Iterator<Searchable> iterator = size.iterator();
+        while (iterator.hasNext()) {
+            Searchable searchable = iterator.next();
+            if (searchable.getSearchTerm().contains(query)) {
+                massiveProduct.add(searchable);
             }
         }
-        return massive;
+        return massiveProduct;
     }
 
 
     public void add(Searchable searchable) {
-        if (count < this.size.length) {
-            for (int i = 0; i < this.size.length; i++) {
-                if (this.size[i] == null) {
-                    this.size[i] = searchable;
-                    count++;
-                    break;
-                }
-            }
-        }
+        size.add(searchable);
     }
 
     public Searchable searchable(String search) throws BestResultNotFound {
         Searchable bestMatch = null;
         int maxQuantity = 0;
-        for (int i = 0; i < this.size.length; i++) {
+        for (Searchable element : size) {
             int quantity = 0;
             int index = 0;
-            if (this.size[i] != null) {
-                int indexSubstrings = this.size[i].getSearchTerm().indexOf(search, index);
-                while (this.size[i] != null && indexSubstrings != -1) {
+                int indexSubstrings = element.getSearchTerm().indexOf(search, index);
+                while (indexSubstrings != -1) {
                     quantity++;
                     index = indexSubstrings + search.length();
-                    indexSubstrings = this.size[i].getSearchTerm().indexOf(search, index);
+                    indexSubstrings = element.getSearchTerm().indexOf(search, index);
                 }
-            }
+
             if (quantity > maxQuantity) {
-                bestMatch = size[i];
+                bestMatch = element;
                 maxQuantity = quantity;
             }
 
