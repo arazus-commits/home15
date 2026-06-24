@@ -52,8 +52,8 @@ public class App {
         product.add(article);
         product.add(article2);
 
-        System.out.println(product.search("Яблоко"));
-        System.out.println(product.search("Текст"));
+        System.out.println(product.search("Яблоко").values());
+        System.out.println(product.search("Текст").values());
 
         try {
             Product fruit4 = new SimpleProduct("  ", 323);

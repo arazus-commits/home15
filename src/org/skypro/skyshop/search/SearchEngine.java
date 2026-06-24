@@ -2,21 +2,16 @@ package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.product.Product;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class SearchEngine {
     private final List<Searchable> size = new LinkedList<>();
 
-
-    public List <Searchable> search(String query) {
-        List<Searchable> massiveProduct = new LinkedList<>();
-        Iterator<Searchable> iterator = size.iterator();
-        while (iterator.hasNext()) {
-            Searchable searchable = iterator.next();
+    public Map <String, Searchable> search(String query) {
+        Map <String, Searchable> massiveProduct = new TreeMap<>();
+        for (Searchable searchable : size) {
             if (searchable.getSearchTerm().contains(query)) {
-                massiveProduct.add(searchable);
+                massiveProduct.put(searchable.getName(), searchable);
             }
         }
         return massiveProduct;

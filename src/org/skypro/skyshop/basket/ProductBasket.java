@@ -2,21 +2,25 @@ package org.skypro.skyshop.basket;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 import org.skypro.skyshop.product.Product;
 
 public class ProductBasket {
-    private final List<Product> massiveProduct = new LinkedList<>();
+    private final Map<String, List<Product>> massiveProduct  = new HashMap<>();
     private int count = 0;
 
     public void newProduct(Product product) {
-        massiveProduct.add(product);
+        massiveProduct.computeIfAbsent(product.getNameProduct(), k -> new LinkedList<Product>()).add(product);
         count++;
     }
 
     public int sumProduct() {
         int sum = 0;
-        for (Product product : massiveProduct) {
-            sum += product.getPrice();
+        for (List<Product> productList : massiveProduct.values()) {
+            for (Product product : productList) {
+                sum += product.getPrice();
+            }
         }
         return sum;
     }
@@ -26,21 +30,17 @@ public class ProductBasket {
             System.out.println("В корзине пусто");
             return;
         }
-        for (Product product : massiveProduct) {
-            System.out.println(product);
+        for (List<Product> productList : massiveProduct.values()) {
+            for (Product product : productList) {
+                System.out.println(product);
+            }
         }
-
         System.out.println("Итого: " + sumProduct());
         System.out.println("Специальных товаров: " + sumSpecial());
     }
 
     public boolean sameName(String name) {
-        for (Product product : massiveProduct) {
-            if (product.getNameProduct().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return massiveProduct.containsKey(name);
     }
 
     public void cleaningMassive() {
@@ -49,25 +49,21 @@ public class ProductBasket {
 
     public int sumSpecial() {
         int sum = 0;
-        for (Product product : massiveProduct) {
-            if (product.isSpecial() == true) {
-                sum += 1;
+        for (List<Product> productList : massiveProduct.values()) {
+            for (Product product : productList) {
+                if (product.isSpecial()) {
+                    sum += 1;
+                }
             }
         }
         return sum;
     }
 
     public List <Product> removeProductByName(String name) {
-        List<Product> massiveProduct2 = new LinkedList<>();
-            Iterator<Product> iterator = massiveProduct.iterator();
-
-            while (iterator.hasNext()) {
-                Product product = iterator.next();
-                if (product.getNameProduct().equals(name)) {
-                    massiveProduct2.add(product);
-                    iterator.remove();
-                }
-            }
+        List<Product> massiveProduct2 = massiveProduct.remove(name);
+        if (massiveProduct2 == null) {
+            return new LinkedList<Product>();
+        }
         return massiveProduct2;
     }
 }
