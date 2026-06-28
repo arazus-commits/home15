@@ -5,13 +5,13 @@ import org.skypro.skyshop.product.Product;
 import java.util.*;
 
 public class SearchEngine {
-    private final List<Searchable> size = new LinkedList<>();
+    private final Set<Searchable> size = new HashSet<>();
 
-    public Map <String, Searchable> search(String query) {
-        Map <String, Searchable> massiveProduct = new TreeMap<>();
+    public Set <Searchable> search(String query) {
+        Set <Searchable> massiveProduct = new TreeSet<>();
         for (Searchable searchable : size) {
             if (searchable.getSearchTerm().contains(query)) {
-                massiveProduct.put(searchable.getName(), searchable);
+                massiveProduct.add(searchable);
             }
         }
         return massiveProduct;
@@ -49,4 +49,16 @@ public class SearchEngine {
 
     }
 
-}
+    Set<Searchable> massiveProduct = new TreeSet<>((s1, s2) -> {
+        int o1 = s1.getName().length();
+        int o2 = s2.getName().length();
+        if (Integer.compare(o2, o1) == 0) {
+            return s1.getName().compareTo(s2.getName());
+        } else {
+            return Integer.compare(o2, o1);
+        }
+    });
+    }
+
+
+
