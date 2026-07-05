@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 import org.skypro.skyshop.product.Product;
+import java.util.Collection;
 
 public class ProductBasket {
     private final Map<String, List<Product>> massiveProduct  = new HashMap<>();
@@ -16,13 +17,9 @@ public class ProductBasket {
     }
 
     public int sumProduct() {
-        int sum = 0;
-        for (List<Product> productList : massiveProduct.values()) {
-            for (Product product : productList) {
-                sum += product.getPrice();
-            }
-        }
-        return sum;
+        return massiveProduct.values().stream().flatMap(Collection::stream)
+                .mapToInt(Product :: getPrice)
+                .sum();
     }
 
     public void sealProduct() {
@@ -30,13 +27,12 @@ public class ProductBasket {
             System.out.println("В корзине пусто");
             return;
         }
-        for (List<Product> productList : massiveProduct.values()) {
-            for (Product product : productList) {
-                System.out.println(product);
-            }
-        }
+        massiveProduct.values().stream().flatMap(Collection::stream)
+                        .forEach(System.out::println);
+
+
         System.out.println("Итого: " + sumProduct());
-        System.out.println("Специальных товаров: " + sumSpecial());
+        System.out.println("Специальных товаров: " + getSpecialCount());
     }
 
     public boolean sameName(String name) {
@@ -47,16 +43,11 @@ public class ProductBasket {
         massiveProduct.clear();
     }
 
-    public int sumSpecial() {
-        int sum = 0;
-        for (List<Product> productList : massiveProduct.values()) {
-            for (Product product : productList) {
-                if (product.isSpecial()) {
-                    sum += 1;
-                }
-            }
-        }
-        return sum;
+    private long getSpecialCount() {
+        return massiveProduct.values().stream().flatMap(Collection::stream)
+                .filter(product -> product.isSpecial())
+                .count();
+
     }
 
     public List <Product> removeProductByName(String name) {

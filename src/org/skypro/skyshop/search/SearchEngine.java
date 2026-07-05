@@ -1,6 +1,7 @@
 package org.skypro.skyshop.search;
 
 import org.skypro.skyshop.product.Product;
+import java.util.stream.Collectors;
 
 import java.util.*;
 
@@ -8,13 +9,18 @@ public class SearchEngine {
     private final Set<Searchable> size = new HashSet<>();
 
     public Set <Searchable> search(String query) {
-        Set <Searchable> massiveProduct = new TreeSet<>();
-        for (Searchable searchable : size) {
-            if (searchable.getSearchTerm().contains(query)) {
-                massiveProduct.add(searchable);
-            }
-        }
-        return massiveProduct;
+   Set<Searchable> result = size.stream()
+           .filter(searchable -> searchable.getSearchTerm().contains(query))
+           .collect(Collectors.toCollection(() -> new TreeSet<>((s1, s2) -> {
+               int o1 = s1.getName().length();
+               int o2 = s2.getName().length();
+               if (Integer.compare(o2, o1) == 0) {
+                   return s1.getName().compareTo(s2.getName());
+               } else {
+                   return Integer.compare(o2, o1);
+               }
+           })));
+        return result;
     }
 
 
@@ -48,16 +54,6 @@ public class SearchEngine {
         return bestMatch;
 
     }
-
-    Set<Searchable> massiveProduct = new TreeSet<>((s1, s2) -> {
-        int o1 = s1.getName().length();
-        int o2 = s2.getName().length();
-        if (Integer.compare(o2, o1) == 0) {
-            return s1.getName().compareTo(s2.getName());
-        } else {
-            return Integer.compare(o2, o1);
-        }
-    });
     }
 
 
